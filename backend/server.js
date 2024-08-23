@@ -67,9 +67,16 @@ dbConnection();
 await server.start();
 
 // Apply middleware to the Express app, including CORS, JSON parsing, and Apollo Server integration
+
 app.use(
-  '/',
-  cors(), // Enable Cross-Origin Resource Sharing
+  cors({
+    origin: "http://localhost:5173",  // Ensure no trailing slash
+    optionsSuccessStatus: 200,
+    credentials: true,
+  })
+);
+app.use(
+  '/graphql',
   express.json(), // Parse incoming JSON requests
   expressMiddleware(server, {
     context: async ({ req, res }) => buildContext({ req, res }), // Build context for GraphQL, including Passport

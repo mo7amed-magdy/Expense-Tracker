@@ -39,7 +39,7 @@ const userResolver = {
                     throw new Error('All fields are required');
                 }
                 // Check if the username already exists in the database
-                const existingUser = await userModel.findOne({ userName: username });
+                const existingUser = await userModel.findOne({ username });
                 if (existingUser) {
                     throw new Error('Username already exists');
                 }
@@ -50,7 +50,7 @@ const userResolver = {
                 const girlProfilePic = `https://avatar.iran.liara.run/public/girl?username=${username}`;
                 // Create a new user object and save it to the database
                 const newUser = new userModel({
-                    userName: username,
+                    username,
                     name,
                     password: hashedPassword,
                     gender,
@@ -87,14 +87,14 @@ const userResolver = {
         logout: async (_, args, context) => {
             try {
                 await context.logout(); // Log the user out by clearing their session
-                req.session.destroy((err) => {
+                context.req.session.destroy((err) => {
                     if (err) {
                         console.log("error in logout ", err);
                         throw new Error(err.message); // Throw an error if session destruction fails
                     }
-                    res.clearCookie("connect.sid"); // Clear the session cookie
-                    return { message: "Logout successfully" }; // Return a success message
                 });
+                    context.res.clearCookie("connect.sid"); // Clear the session cookie
+                    return { message: "Logout successfully" }; // Return a success message
             } catch (err) {
                 console.log("error in logout ", err);
                 throw new Error(err.message); // Throw an error if the logout process fails
