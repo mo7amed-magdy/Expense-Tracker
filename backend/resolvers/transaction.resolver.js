@@ -83,10 +83,10 @@ const transactionResolver = {
         },
         
         // Resolver to delete an existing transaction
-        deleteTransaction: async (parent, { input }, context) => {
+        deleteTransaction: async (parent, { transactionId }, context) => {
             try {
                 // Find the transaction by its ID and delete it
-                const deletedTransaction = await transactionModel.findByIdAndDelete(input.transactionId);
+                const deletedTransaction = await transactionModel.findByIdAndDelete(transactionId);
                 
                 // Throw an error if the transaction is not found
                 if (!deletedTransaction) throw new Error('Transaction not found');
