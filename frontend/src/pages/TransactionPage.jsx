@@ -13,7 +13,9 @@ const TransactionPage = () => {
 	const {loading,data} = useQuery(GET_SINGLE_TRANSACTION,{
 		variables: { id },
 	})	
-	const [updateTransaction,{loading:updating}] = useMutation(UPDATE_TRANSACTION)
+	const [updateTransaction,{loading:updating}] = useMutation(UPDATE_TRANSACTION,{
+		refetchQueries:['GetStatistics']
+	})
 	const [formData, setFormData] = useState({
 		description: data?.transaction.description ||"",
 		paymentType: data?.transaction.paymentType ||"",
@@ -26,6 +28,10 @@ const TransactionPage = () => {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		const amount = parseFloat(formData.amount)
+		if(!formData.amount||!formData.description){
+			toast.error("Please fill out all fields")
+            return;
+		}
 		try {
 			await updateTransaction({
 				variables: {input:{

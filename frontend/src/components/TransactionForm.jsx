@@ -4,7 +4,7 @@ import { toast } from 'react-hot-toast';
 
 const TransactionForm = () => {
 	const [createTransaction,{loading}]=useMutation(CREATE_TRANSACTION,{
-		refetchQueries:['GetTransactions']
+		refetchQueries:['GetTransactions','GetStatistics']
 	})
 
 	const handleSubmit = async (e) => {
@@ -27,8 +27,7 @@ const TransactionForm = () => {
 			form.reset()
 			toast.success('Transaction created successfully!')
 		} catch (error) {
-			console.error('Error: ',error)
-			toast.error(error.message)
+			toast.error("error creating transaction")
 		}
 		
 	};

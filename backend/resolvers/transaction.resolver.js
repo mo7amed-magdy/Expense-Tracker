@@ -20,7 +20,7 @@ const transactionResolver = {
                 // Return the list of transactions
                 return transactions;
             } catch (error) {
-                console.log("error getting transactions", error);
+                
                 throw new Error(error.message); // Throw an error if fetching transactions fails
             }
         },
@@ -37,11 +37,41 @@ const transactionResolver = {
                 // Return the transaction object
                 return transaction;
             } catch (error) {
-                console.log("error getting transaction", error);
                 throw new Error(error.message); // Throw an error if fetching the transaction fails
             }
+        },
+        categoryStatistics: async (_,__,context)=>{
+            try {
+                // Check if the user is authenticated
+                const user = await context.getUser();
+                if (!user) throw new Error('User not authenticated');
+                const userId = user._id;
+                                
+                // Get the authenticated user's ID
+                
+                
+                // Find all transactions associated with the authenticated user
+                const transactions = await transactionModel.find({ userId });
+                
+                // Initialize counters for each category
+                const categoryStats = {};
+               transactions.forEach((trans)=>{
+                if(!categoryStats[trans.category]){
+                    categoryStats[trans.category]=0;
+                }
+                categoryStats[trans.category]+= trans.amount;
+               })
+                
+                // Return the category statistics
+                return Object.entries(categoryStats).map(([category,totalAmount]) => ({category,totalAmount}));
+            } catch (error) {
+                console.log(error);
+                
+                throw new Error(error.message); // Throw an error if fetching the category statistics fails
+    
         }
     },
+},
     
     // Define resolvers for GraphQL mutations
     Mutation: {
@@ -60,7 +90,6 @@ const transactionResolver = {
                 // Return the newly created transaction
                 return newTransaction;
             } catch (error) {
-                console.log("error creating transaction", error);
                 throw new Error(error.message); // Throw an error if creating the transaction fails
             }
         },
@@ -77,7 +106,6 @@ const transactionResolver = {
                 // Return the updated transaction object
                 return updatedTransaction;
             } catch (error) {
-                console.log("error updating transaction", error);
                 throw new Error(error.message); // Throw an error if updating the transaction fails
             }
         },
@@ -94,7 +122,6 @@ const transactionResolver = {
                 // Return the deleted transaction object
                 return deletedTransaction;
             } catch (error) {
-                console.log("error deleting transaction", error);
                 throw new Error(error.message); // Throw an error if deleting the transaction fails
             }
         }

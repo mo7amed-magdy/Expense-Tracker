@@ -12,7 +12,6 @@ const userResolver = {
                 let user = await context.getUser(); // Get the authenticated user from the context
                 return user; // Return the authenticated user
             } catch (error) {
-                console.log("error in authUser ", error);
                 throw new Error(error.message); // Throw an error if authentication fails
             }
         },
@@ -22,7 +21,6 @@ const userResolver = {
                 const user = await userModel.findById(args.userId); // Find the user by ID from the database
                 return user; // Return the user object
             } catch (error) {
-                console.log("error in user ", error);
                 throw new Error(error.message); // Throw an error if fetching the user fails
             }
         }
@@ -60,7 +58,6 @@ const userResolver = {
                 await context.login(newUser); // Log the user in by saving their session
                 return newUser; // Return the new user object
             } catch (error) {
-                console.log("error in signUp ", error);
                 throw new Error(error.message); // Throw an error if the sign-up process fails
             }
         },
@@ -78,7 +75,6 @@ const userResolver = {
                 await context.login(user); // Log the user in by saving their session
                 return user; // Return the authenticated user object
             } catch (err) {
-                console.log("error in login ", err);
                 throw new Error(err.message); // Throw an error if the sign-in process fails
             }
         },
@@ -87,6 +83,8 @@ const userResolver = {
         logout: async (_, args, context) => {
             try {
                 await context.logout(); // Log the user out by clearing their session
+                console.log("logout");
+                
                 context.req.session.destroy((err) => {
                     if (err) {
                         console.log("error in logout ", err);

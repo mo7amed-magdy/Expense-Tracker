@@ -25,5 +25,13 @@ query GetTransaction($id: ID! ){
         location
     }
 }
+`
+export const GET_STATISTICS = gql`
+query GetStatistics{
+    categoryStatistics{
+        category
+        totalAmount
+    }
+}
 
 `

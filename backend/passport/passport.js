@@ -9,13 +9,13 @@ export const configurePassport = async () => {
 
     // Serialize user information into the session
     passport.serializeUser((user, done) => {
-        console.log("serializing user");
+        
         done(null, user.id); // Save the user's ID in the session
     });
 
     // Deserialize user information from the session
     passport.deserializeUser(async (id, done) => {
-        console.log("deserializing user");
+        
         try {
             const user = await userModel.findById(id); // Retrieve the user by ID from the database
             done(null, user); // Attach the user object to the request object
